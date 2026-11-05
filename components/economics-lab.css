@@ -1,0 +1,32 @@
+.econ-lab{--econ-demand:#116b70;--econ-supply:#526eab;--econ-tax:#a85325;--econ-muted:#536477;color:#233041}
+.econ-lab .econ-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
+.econ-toolbar p{font-size:12px;line-height:1.6;margin:0;color:#536477}
+.econ-reset{display:flex;align-items:center;gap:5px;white-space:nowrap;background:#fff;border:1px solid #bdced9;border-radius:6px;color:#116b70;padding:7px 10px;font-size:12px}
+.econ-chart{background:#fff;border:1px solid #d7dfe8;border-radius:10px;padding:12px 6px 2px;overflow:hidden}
+.econ-chart svg{display:block;width:100%;height:auto}
+.econ-chart svg text{font-family:inherit;fill:#35465b;font-size:12px}
+.econ-chart svg .econ-curve-label{font-size:13px;font-weight:600;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.econ-chart svg .econ-point-label{font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:4px}
+.econ-legend{display:flex;gap:8px 16px;flex-wrap:wrap;padding:4px 14px 12px;font-size:11px;color:#44566b;line-height:1.6}
+.econ-legend span{display:flex;align-items:center;gap:5px}
+.econ-legend i{width:16px;height:3px;display:inline-block;flex-shrink:0;background:var(--econ-demand)}
+.econ-legend .supply i{background:var(--econ-supply)}
+.econ-legend .tax i{background:var(--econ-tax)}
+.econ-legend .revenue i{height:9px;background:#b7dbd5}
+.econ-legend .loss i{height:9px;background:#f0ceb8}
+.econ-legend .potential i{background:#6b7280}
+.econ-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0}
+.econ-controls.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.econ-controls .sl-range{margin:0}
+.econ-controls label{display:block;line-height:1.6}
+.econ-controls label span{display:block}
+.econ-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:15px 0}
+.econ-metrics>div{background:#f3f6f9;border:1px solid #dce3eb;border-radius:7px;padding:10px;min-width:0}
+.econ-metrics span{display:block;color:#44566b;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.econ-metrics strong{display:block;color:#116b70;font-size:19px;font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums}
+.econ-metrics small{display:block;font-size:11px;color:#536477;margin-top:3px;line-height:1.5}
+.econ-formulas{border-top:1px solid #dce3eb;border-bottom:1px solid #dce3eb;padding:11px 0;margin:16px 0;font-size:12px;line-height:1.9;color:#44566b}
+.econ-formulas p{margin:0}.econ-formulas summary{cursor:pointer;color:#116b70;font-weight:600}
+.econ-formulas>div{padding-top:8px}
+.econ-gap{display:inline-flex;align-items:center;border-radius:20px;padding:5px 10px;background:#edf5f6;color:#116b70;font-size:12px;font-weight:600;margin:0 0 12px}
+@media(max-width:480px){.econ-controls,.econ-controls.two{grid-template-columns:1fr;gap:14px}.econ-controls label{display:flex;justify-content:space-between;gap:10px}.econ-controls label span{display:inline}.econ-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.econ-legend{padding-left:8px;padding-right:8px;gap:6px 12px}.econ-toolbar{align-items:flex-start}.econ-chart{padding:8px 0 0}}

@@ -1,11 +1,15 @@
 /**
  * Curated study map; verified against College Board on 2026-11-02.
+ * Economics additions verified against the Fall 2026 CEDs on 2026-11-05.
  * Topic summaries, connections and practice prompts are original teaching aids.
  * This map groups selected concepts; it is not a complete CED or an official question bank.
  * Statistics uses the framework effective Fall 2026. ELC is grouped by its four
  * skill families; these spiral through the nine official instructional units.
  */
-export type SubjectId = 'world' | 'elc' | 'physics' | 'stats' | 'psych' | 'research';
+import type {SubjectId} from './subject-ids.ts';
+import {microeconomics} from './economics-micro.ts';
+import {macroeconomics} from './economics-macro.ts';
+export type {SubjectId} from './subject-ids.ts';
 
 export type Topic = {
   id: string;
@@ -470,6 +474,24 @@ export const subjects: Subject[] = [
   },
 ];
 
+subjects.push(microeconomics,macroeconomics);
+
+// Connect the new economics paths from existing courses as well as within economics.
+const economicsBridges:[string,string,string][]=[
+ ['world-industrialization','macro-growth','把工业化与长期生产能力联系'],
+ ['world-industrialization','micro-costs','技术改变生产率与成本'],
+ ['world-globalization','macro-forex','汇率与跨境交易的传导条件'],
+ ['world-globalization','macro-balance-payments','用国际收支区分商品与资金流动'],
+ ['stats-regression','micro-demand-supply','估计需求时检查同时性与因果识别'],
+ ['psych-thinking','micro-marginal-utility','比较理性选择假设与实际决策'],
+ ['research-method','micro-externalities','评估政策效果需要可信识别设计'],
+ ['elc-argument','micro-policy-welfare','区分效率分析与分配价值判断'],
+];
+for(const [from,to,label] of economicsBridges){
+ const source=subjects.flatMap(s=>s.units.flatMap(u=>u.topics)).find(t=>t.id===from);
+ source?.links.push({to,label});
+}
+
 export const allTopics = subjects.flatMap(s =>
   s.units.flatMap(u => u.topics.map(t => ({ ...t, subjectId: s.id, unit: u.title }))),
 );
@@ -480,6 +502,8 @@ export const topicById: Record<string, (typeof allTopics)[number]> = Object.from
 
 /** Additional official references used by project review and preparation. */
 export const curriculumReferences = [
+  { label:'AP Microeconomics CED · effective Fall 2026',url:'https://apcentral.collegeboard.org/media/pdf/ap-microeconomics-course-and-exam-description.pdf' },
+  { label:'AP Macroeconomics CED · effective Fall 2026',url:'https://apcentral.collegeboard.org/media/pdf/ap-macroeconomics-course-and-exam-description.pdf' },
   { label: '2026–27 AP Capstone AI policy & required checkpoints', url: 'https://apcentral.collegeboard.org/exam-administration-ordering-scores/administering-exams/exam-policies/artificial-intelligence-tools' },
   { label: 'AP Capstone research ethics & review policies', url: 'https://apcentral.collegeboard.org/courses/resources/ap-capstone-policies' },
   { label: 'AP Research assessment format & weighting', url: 'https://apcentral.collegeboard.org/courses/ap-research/exam' },

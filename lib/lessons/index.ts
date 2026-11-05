@@ -1,9 +1,11 @@
 import {physicsStatsLessons} from './physics-stats.ts';
 import {worldElcLessons} from './world-elc.ts';
 import {psychResearchLessons} from './psych-research.ts';
+import {microLessons} from './micro.ts';
+import {macroLessons} from './macro.ts';
 import type {Lesson,LessonMap} from './types';
 
-export const lessons:LessonMap={...physicsStatsLessons,...worldElcLessons,...psychResearchLessons};
+export const lessons:LessonMap={...physicsStatsLessons,...worldElcLessons,...psychResearchLessons,...microLessons,...macroLessons};
 export function getLesson(topicId:string):Lesson {
  const lesson=lessons[topicId];
  if(!lesson)throw new Error(`知识卡尚未配置：${topicId}`);

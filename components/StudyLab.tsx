@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, ArrowUpRight, BatteryCharging, FlaskConical, RefreshCw, Sparkles } from "lucide-react";
 import "./study-lab.css";
+import EconomicsLab from './EconomicsLab';
 
 type Props = { subjectId: string; onAsk: (prompt: string) => void };
 
@@ -148,6 +149,7 @@ function ResearchLab({ onAsk }: Pick<Props, "onAsk">) {
 
 export default function StudyLab({ subjectId, onAsk }: Props) {
   const subject = subjectId.toLowerCase();
+  if(subject==='micro'||subject==='macro')return <EconomicsLab key={subject} subjectId={subject} onAsk={onAsk}/>;
   if (["physics", "physics-c", "em"].includes(subject)) return <PhysicsLab onAsk={onAsk} />;
   if (["stats", "statistics"].includes(subject)) return <StatsLab onAsk={onAsk} />;
   if (["world", "world-history", "history"].includes(subject)) return <WorldLab onAsk={onAsk} />;

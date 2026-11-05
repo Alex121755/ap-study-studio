@@ -1,6 +1,6 @@
 "use client";
 import {useState,useEffect,useRef,useCallback} from "react";
-import {ArrowUpRight,ArrowUp,ArrowRight,BookOpen,Network,FlaskConical,Target,NotebookPen,Settings,Plus,Search,Check,ChevronDown,ChevronRight,Globe2,Atom,ChartNoAxesCombined,Brain,Feather,Microscope,Square,Paperclip,Download,Upload,X,LoaderCircle,ExternalLink,CalendarDays,PanelLeftClose,PanelLeftOpen,RefreshCw,Compass,Sparkles,Clock3,CheckCircle2} from "lucide-react";
+import {ArrowUpRight,ArrowUp,ArrowRight,BookOpen,Network,FlaskConical,Target,NotebookPen,Settings,Plus,Search,Check,ChevronDown,ChevronRight,Globe2,Atom,ChartNoAxesCombined,Brain,Feather,Microscope,Square,Paperclip,Download,Upload,X,LoaderCircle,ExternalLink,CalendarDays,PanelLeftClose,PanelLeftOpen,RefreshCw,Compass,Sparkles,Clock3,CheckCircle2,ShoppingCart,Landmark} from "lucide-react";
 import {subjects,allTopics} from "@/lib/curriculum";
 import KnowledgeGraph from "./KnowledgeGraph";
 import Message from "./Message";
@@ -12,15 +12,12 @@ import {lessonSearchText} from "@/lib/lessons";
 import ModelSelector from "./ModelSelector";
 import useModelCatalog from "./useModelCatalog";
 import ApiKeySettings from "./ApiKeySettings";
+import {EMPTY,safeSaved,type Chat,type Saved} from "@/lib/study-storage";
 
 type View='workspace'|'graph'|'lab'|'practice'|'research'|'notes'|'materials';
 type Mode='tutor'|'practice'|'review'|'research'|'connections';
-type Chat={role:'user'|'assistant';content:string};
-type Mastery={level:number;due:number;reviews:number};
-type Saved={version:1;chats:Record<string,Chat[]>;notes:Record<string,string>;mastery:Record<string,Mastery>;project:{question:string;method:string;population:string;stage:string};exam:string;attempts:number;correct:number};
-const EMPTY:Saved={version:1,chats:{},notes:{},mastery:{},project:{question:'',method:'',population:'',stage:'选题与文献'},exam:'',attempts:0,correct:0};
 const STORE='ap-atlas-v1';
-const icons:Record<string,typeof Atom>={world:Globe2,elc:Feather,physics:Atom,stats:ChartNoAxesCombined,psych:Brain,research:Microscope};
+const icons:Record<string,typeof Atom>={world:Globe2,elc:Feather,physics:Atom,stats:ChartNoAxesCombined,psych:Brain,research:Microscope,micro:ShoppingCart,macro:Landmark};
 const MODES:{id:Mode;name:string}[]=[{id:'tutor',name:'理解概念'},{id:'practice',name:'出题训练'},{id:'review',name:'审查作答'},{id:'connections',name:'建立关联'}];
 const practices:Record<string,{q:string;choices:string[];answer:number;why:string;topic:string}>={
  physics:{q:'理想平行板电容器充电后与电池断开，再把极板间距加倍。忽略边缘效应，哪项正确？',choices:['电容不变，电压加倍','电荷不变，电压加倍','电压不变，电荷减半','电容加倍，储能减半'],answer:1,why:'断开后电荷 Q 守恒。C = ε₀A/d 减半，因此 ΔV = Q/C 加倍，U = Q²/(2C) 也加倍。增加的能量来自分离极板时的外力做功。',topic:'physics-capacitance'},
@@ -28,18 +25,10 @@ const practices:Record<string,{q:string;choices:string[];answer:number;why:strin
  world:{q:'解释工业革命为何首先在英国发展时，下列哪种论证最能体现历史因果推理？',choices:['列出英国几项发明的日期','只说明当时英国人口增加','联系煤炭、资本、劳动与贸易条件，并解释它们如何共同促进机械化','认为工业化由单一因素完全决定'],answer:2,why:'因果论证需要说明机制、背景和多因素的相互作用。罗列事件不等于解释因果；单因解释也容易忽略条件之间的联系。',topic:'world-industrialization'},
  elc:{q:'作者先承认对方担忧合理，再指出其论证忽略的条件。这种写作选择最可能如何推进论证？',choices:['完全放弃作者原有立场','在建立可信度的同时限定反方观点并推进自己的主张','证明所有反方证据都不真实','只用于制造情绪，与推理无关'],answer:1,why:'Concession 可以显示作者理解争议的复杂性；后续 qualification 或 rebuttal 说明承认的范围。分析时还应结合具体受众和目的，不能只命名手法。',topic:'elc-reasoning'},
  psych:{q:'一段原本中性的声音与食物反复配对后，声音本身就引发唾液分泌。在经典条件作用中，这段声音现在是？',choices:['无条件刺激 US','条件刺激 CS','无条件反应 UR','负强化'],answer:1,why:'声音原先是中性刺激，配对后成为条件刺激 CS；对声音的唾液反应是条件反应 CR。食物仍是无条件刺激 US。',topic:'psych-conditioning'},
+ micro:{q:'需求保持不变，政府对每单位商品向卖方征税。标准向上倾斜供给、向下倾斜需求模型中，哪项正确？',choices:['税由卖方缴纳，所以卖方承担全部税负','买方支付价上升，卖方净收价下降，交易量减少','税只平移需求曲线，均衡交易量不变','税收收入等于无谓损失'],answer:1,why:'每单位税形成买方价与卖方净收价之间的税楔，税负分配由双方相对弹性决定。交易量减少会产生无谓损失；税收收入为税额乘以税后交易量。',topic:'micro-policy-welfare'},
+ macro:{q:'短期内总供给曲线向上倾斜，其他条件不变，政府增加购买支出。AD–AS 模型通常预测什么？',choices:['AD 左移，价格水平下降','SRAS 右移，实际产出下降','AD 右移，实际产出和价格水平均上升','潜在产出必然立即增加相同数额'],answer:2,why:'政府购买是总支出的一部分，增加会使 AD 右移；在向上倾斜的 SRAS 上，短期均衡实际产出与价格水平上升。潜在产出取决于生产能力，不能由这次需求变化直接确定。',topic:'macro-ad-as'},
  research:{q:'你的研究问题涉及“所有高中生”，但只从自己社团招募了 20 名自愿者。最优先处理的对齐问题是？',choices:['把标题写得更长','忽略抽样，只报告显著性','收窄目标总体与结论范围，说明选择偏差，并检查招募方式','将相关结果改写为因果结果'],answer:2,why:'研究问题、样本和可支持的推论范围必须对齐。便利与自愿样本可能存在选择偏差；统计显著性不能修复抽样设计。',topic:'research-method'}
 };
-function safeSaved(v:unknown):Saved|null {
- if(!v||typeof v!=='object')return null;
- const x=v as Partial<Saved>;
- if(x.version!==1||!x.chats||!x.notes||!x.mastery||!x.project)return null;
- const clean:Saved={...EMPTY,chats:{},notes:{},mastery:{},project:{...EMPTY.project},exam:typeof x.exam==='string'?x.exam.slice(0,10):'',attempts:Math.max(0,Number(x.attempts)||0),correct:Math.max(0,Number(x.correct)||0)};
- for(const [k,chat] of Object.entries(x.chats)){if(/^(world|elc|physics|stats|psych|research):(tutor|practice|review|research|connections)$/.test(k)&&Array.isArray(chat))clean.chats[k]=chat.filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').slice(-60).map(m=>({role:m.role,content:m.content.slice(0,30000)}));}
- for(const t of allTopics){if(typeof x.notes[t.id]==='string')clean.notes[t.id]=x.notes[t.id].slice(0,20000);const m=x.mastery[t.id];if(m&&Number.isFinite(m.due)&&Number.isInteger(m.level)&&m.level>=0&&m.level<=3)clean.mastery[t.id]={level:m.level,due:m.due,reviews:Math.max(0,Number(m.reviews)||0)};}
- for(const k of ['question','method','population','stage'] as const)if(typeof x.project[k]==='string')clean.project[k]=x.project[k].slice(0,6000);
- return clean;
-}
 export default function Studio(){
  const [view,setView]=useState<View>('workspace');
  const [subjectId,setSubjectId]=useState('physics');
@@ -139,15 +128,15 @@ export default function Studio(){
    <a className="brand" href="/" aria-label="AP Atlas 首页"><div className="brand-mark"><Network size={23}/></div><div>AP <span>Atlas</span><small>YOUR LEARNING, CONNECTED</small></div></a>
    <div className="sidebar-label">学习空间 <span>2026—27</span></div>
    <nav>{nav.map(([id,NavIcon,label])=><button key={id} aria-label={label} title={label} className={`nav-item ${view===id?'active':''}`} onClick={()=>{setView(id);if(id==='research'){selectSubject('research');setMode('research')}}}><NavIcon size={18}/><span>{label}</span>{id==='notes'&&due.length>0&&<b>{due.length}</b>}</button>)}</nav>
-   <div className="sidebar-label courses-label">我的课程 <span>06</span></div>
+   <div className="sidebar-label courses-label">我的课程 <span>{String(subjects.length).padStart(2,'0')}</span></div>
    <div className="side-courses">{subjects.map(s=>{const CIcon=icons[s.id];return <button key={s.id} aria-label={s.short} title={s.name} className={subjectId===s.id?'selected':''} onClick={()=>selectSubject(s.id)}><CIcon size={16} style={{color:s.color}}/><span>{s.short}</span>{subjectId===s.id&&<span className="tiny-dot"/>}</button>})}</div>
    <div className="sidebar-bottom"><div className="saved-label"><span className="tiny-dot"/>{ready?'学习记录保存在此浏览器':'读取学习记录…'}</div><button className="nav-item" onClick={()=>setSettings(true)}><Settings size={17}/><span>设置与数据</span></button><div className="profile"><div className="avatar">A</div><div><strong>我的 AP 学习空间</strong><small>保持好奇，建立联系。</small></div><button className="icon-btn" aria-label="折叠侧栏" onClick={()=>setCollapsed(true)}><PanelLeftClose size={16}/></button></div></div>
   </aside>
   <main className="main">
    <header className="topbar"><div className="breadcrumb">{collapsed&&<button className="icon-btn" aria-label="展开侧栏" onClick={()=>setCollapsed(false)}><PanelLeftOpen size={20}/></button>}<span>学习空间</span><ChevronRight size={14}/><strong>{nav.find(n=>n[0]===view)?.[2]}</strong></div><div className="top-actions"><div className="search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="搜索知识点…" aria-label="搜索所有学科知识点"/>{query&&<div className="search-results">{allTopics.filter(t=>topicMatches(t)).slice(0,9).map(t=><button key={t.id} onClick={()=>{openLesson(t.id);setView('graph')}}><span>{t.title}</span><small>{subjects.find(s=>s.id===t.subjectId)?.short}</small></button>)}{!allTopics.some(t=>topicMatches(t))&&<p>没有匹配的知识点</p>}</div>}</div><button className={`connection ${status?.configured?'online':''}`} onClick={()=>setSettings(true)}><i/>{status?.configured?'本机AI已配置':status?'待配置本机AI':'检查本机连接'}</button></div></header>
    <div className="page-content">
-    {(view==='workspace'||view==='graph')&&<section className="hero"><div className="hero-copy"><div className="eyebrow"><span/> THE BIG PICTURE</div><h1>不只记住知识，<br/>让知识<span>连成理解。</span></h1><p>从一个问题出发，看见概念之间的联系。<br className="desktop-break"/>你的六门 AP，在同一张学习地图上。</p><button onClick={()=>{setView('lab')}}>打开交互实验室 <ArrowUpRight size={17}/></button></div><div className="hero-art" aria-hidden="true"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="orbit orbit-three"/><div className="orbit-center"><Network size={37}/><span>CONNECT<br/>THE DOTS</span></div><div className="orb orb-a"><Atom size={24}/><span>Physics</span></div><div className="orb orb-b"><Feather size={23}/><span>Language</span></div><div className="orb orb-c"><Brain size={23}/><span>Psychology</span></div><div className="orb orb-d"><ChartNoAxesCombined size={23}/><span>Statistics</span></div><div className="orb orb-e"><Globe2 size={23}/><span>History</span></div><div className="orb orb-f"><Microscope size={23}/><span>Research</span></div><div className="art-tag">一个概念，很多种连接。 <ArrowUpRight size={13}/></div></div></section>}
-    <div className="section-heading"><div><span className="eyebrow dark">YOUR SUBJECTS</span><h2>{view==='materials'?'你的材料，成为复习的起点':view==='notes'?'让每一次复习留下痕迹':view==='research'?'从好问题，到可辩护的研究':view==='lab'?'动手改变，亲眼理解':view==='practice'?'用问题检验理解':'今天，从哪里开始？'}</h2></div><span className="muted small">六门课程 · 一个工作台</span></div>
+    {(view==='workspace'||view==='graph')&&<section className="hero"><div className="hero-copy"><div className="eyebrow"><span/> THE BIG PICTURE</div><h1>不只记住知识，<br/>让知识<span>连成理解。</span></h1><p>从一个问题出发，看见概念之间的联系。<br className="desktop-break"/>你的 {subjects.length} 门 AP，在同一张学习地图上。</p><button onClick={()=>{setView('lab')}}>打开交互实验室 <ArrowUpRight size={17}/></button></div><div className="hero-art" aria-hidden="true"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="orbit orbit-three"/><div className="orbit-center"><Network size={37}/><span>CONNECT<br/>THE DOTS</span></div><div className="orb orb-a"><Atom size={24}/><span>Physics</span></div><div className="orb orb-b"><Feather size={23}/><span>Language</span></div><div className="orb orb-c"><Brain size={23}/><span>Psychology</span></div><div className="orb orb-d"><ChartNoAxesCombined size={23}/><span>Statistics</span></div><div className="orb orb-e"><Globe2 size={23}/><span>History</span></div><div className="orb orb-f"><Microscope size={23}/><span>Research</span></div><div className="orb orb-g"><ShoppingCart size={19}/><span>Micro</span></div><div className="orb orb-h"><Landmark size={18}/><span>Macro</span></div><div className="art-tag">一个概念，很多种连接。 <ArrowUpRight size={13}/></div></div></section>}
+    <div className="section-heading"><div><span className="eyebrow dark">YOUR SUBJECTS</span><h2>{view==='materials'?'你的材料，成为复习的起点':view==='notes'?'让每一次复习留下痕迹':view==='research'?'从好问题，到可辩护的研究':view==='lab'?'动手改变，亲眼理解':view==='practice'?'用问题检验理解':'今天，从哪里开始？'}</h2></div><span className="muted small">{subjects.length} 门课程 · 一个工作台</span></div>
     <div className="subject-tabs" role="tablist" aria-label="AP 学科">{subjects.map(s=>{const SIcon=icons[s.id];return <button key={s.id} role="tab" aria-selected={subjectId===s.id} className={subjectId===s.id?'active':''} onClick={()=>selectSubject(s.id)} style={{'--subject-color':s.color} as React.CSSProperties}><SIcon size={19}/><div><strong>{s.short}</strong><small>{s.zh}</small></div>{subjectId===s.id&&<ArrowUpRight size={14}/>}</button>})}</div>
     {storageError&&<div className="alert">{storageError}<button onClick={exportData}>导出备份</button></div>}
     <div className="workspace-grid">

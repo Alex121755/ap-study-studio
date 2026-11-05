@@ -14,11 +14,14 @@ export default function KnowledgeGraph({subjectId,selected,onSelect,cross=false,
     const own=allTopics.filter(t=>t.subjectId===subjectId);
     const ids=new Set(own.map(t=>t.id));
     if(cross) own.forEach(t=>t.links.forEach(l=>ids.add(l.to)));
-    const nodes=allTopics.filter(t=>ids.has(t.id)).slice(0,28).map(t=>({id:t.id,label:t.title,detail:t.summary,subjectId:t.subjectId,color:subjects.find(s=>s.id===t.subjectId)?.color??'#4d9b89'}));
+    const related=own.find(t=>t.id===selected)?.links.map(l=>l.to)??[];
+    const neighbors=allTopics.filter(t=>ids.has(t.id)&&t.subjectId!==subjectId).sort((a,b)=>Number(related.includes(b.id))-Number(related.includes(a.id)));
+    const ordered=[...own,...neighbors];
+    const nodes=ordered.slice(0,28).map(t=>({id:t.id,label:t.title,detail:t.summary,subjectId:t.subjectId,color:subjects.find(s=>s.id===t.subjectId)?.color??'#4d9b89'}));
     const visible=new Set(nodes.map(n=>n.id));
     const edges=nodes.flatMap(n=>allTopics.find(t=>t.id===n.id)?.links.filter(l=>visible.has(l.to)).map(l=>({source:n.id,target:l.to,label:l.label}))??[]);
     return {nodes,edges};
-  },[subjectId,cross,data]);
+  },[subjectId,cross,data,selected]);
   const positions=useMemo(()=>{
     const total=graph.nodes.length;
     return graph.nodes.map((node,i)=>{

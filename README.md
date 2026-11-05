@@ -8,7 +8,7 @@
 
 ## 阅读具体知识点
 
-图谱中的每个节点都可以点击，打开完整知识卡；课程路径中的每一条也可直接展开具体子知识点，再进入完整讲解。77 张内置知识卡覆盖六科，每张包含学习目标、4 个具体要点、概念解释、原创解析例题、易错辨析、2 道带参考答案的自测与关联跳转。公式由 KaTeX 显示。
+图谱中的每个节点都可以点击，打开完整知识卡；课程路径中的每一条也可直接展开具体子知识点，再进入完整讲解。109 张内置知识卡覆盖八科，每张包含学习目标、4 个具体要点、概念解释、原创解析例题、易错辨析、2 道带参考答案的自测与关联跳转。公式由 KaTeX 显示。
 
 知识卡保存在本机源码中，阅读无需调用 AI。可以把知识卡摘录存入该知识点的笔记，也可准备一条让教练追问的问题；教练会收到当前卡片作为辅导背景。搜索框也会检索子知识点，例如 `exigence`、`IQR`、`时间常数`。
 
@@ -38,14 +38,22 @@ macOS 完成首次安装后，也可双击 **`启动 AP Atlas.command`** 自动�
 
 ## 包含什么
 
-- **六门学科**：AP World History: Modern、AP English Language and Composition（ELC）、AP Physics C: Electricity and Magnetism、AP Statistics、AP Psychology、AP Research。
-- **知识地图**：77 个精选节点、167 条有向关联，其中 89 条跨学科关联。可按学科探索、点击节点、查看关系、缩放和平移；跨学科图展示相邻概念的一个子集。
+- **八门学科**：AP World History: Modern、AP English Language and Composition（ELC）、AP Physics C: Electricity and Magnetism、AP Statistics、AP Psychology、AP Research、AP Microeconomics、AP Macroeconomics。
+- **知识地图**：109 个精选节点，包含经济学与历史、统计、心理及 Research 的有向关联。可按学科探索、点击节点、查看关系、缩放和平移；跨学科图展示相邻概念的一个子集。
 - **实时 AI 教练**：理解概念、出题训练、审查作答、建立关联；支持选择模型、流式输出和停止生成。关联模式可将 AI 给出的结构化关系显示为图谱。
 - **个人资料库**：按学科保存课堂笔记、网页链接与摘录、文本文件和作业截图，支持搜索、查看、编辑以及加入教练附件。公开网页可显式读取正文；截图可交给支持图像输入的模型分析。
-- **交互实验**：通过学科对应的模型探索电容、置信区间、历史联系、英文论证、记忆与研究设计。各模型在页面中说明其教学假设。
-- **练习**：内置 6 道原创热身题，每科 1 道；AI 可继续生成针对性原创练习，数量取决于 API 额度、服务限制及项目权限。原创练习不属于 College Board 官方题库。
+- **交互实验**：通过学科对应的模型探索电容、置信区间、历史联系、英文论证、记忆、研究设计、微观供需与税负、宏观 AD–SRAS 与产出缺口。各模型在页面中说明其教学假设。
+- **练习**：内置 8 道原创热身题，每科 1 道；AI 可继续生成针对性原创练习，数量取决于 API 额度、服务限制及项目权限。原创练习不属于 College Board 官方题库。
 - **研究工作台**：保存研究问题、阶段、方法、总体与样本，审查问题—方法—证据—结论的对齐，逐题模拟口头答辩。
 - **学习记录**：按知识点记笔记、自评并建立到期复习列表；设置个人考试或检查点日期。
+
+## 经济学复习
+
+新增 **AP Microeconomics（微观）** 与 **AP Macroeconomics（宏观）**，各按当前官方六单元组织 16 个精选节点，共 32 张知识卡、32 个原创解析例题和 64 道带答案自测。每张卡都能直接打开阅读，并支持搜索、笔记、自评、关联跳转和 AI 追问；经济学材料也可按学科保存及导入导出。
+
+微观覆盖机会成本、比较优势、边际效用、供需与弹性、政策福利、成本与竞争、垄断与博弈、要素市场和市场失灵。宏观覆盖 GDP、通胀、失业、AD–AS、财政与货币政策、金融市场、增长与债务、汇率和国际收支。目录是复习精选地图，不能代替完整 CED。
+
+微观实验可调整需求、供给与单位税，实时查看价格、交易量、税负、税收和无谓损失；宏观实验可调整 AD 与 SRAS，观察短期均衡及相对潜在产出的缺口。两者都标注坐标轴、方程和适用假设，可将当前参数交给教练练习 FRQ。图形中的示例数值不是真实经济预测。
 
 ## 开始使用
 
@@ -102,6 +110,7 @@ npm start
 - [AP Physics C: Electricity and Magnetism](https://apcentral.collegeboard.org/courses/ap-physics-c-electricity-and-magnetism)：Unit 8–13。官方页面列有适用于 2026–27 学年的澄清及 2027 考试更新。
 - [AP Statistics](https://apcentral.collegeboard.org/courses/ap-statistics)与[2026 年秋季起生效的 CED](https://apcentral.collegeboard.org/media/pdf/ap-statistics-course-and-exam-description.pdf)：采用 **2026–27 新五单元结构**，不沿用旧九单元。回归部分聚焦图形、相关、线性模型、残差与最小二乘。
 - [AP Psychology](https://apcentral.collegeboard.org/courses/ap-psychology)：当前五单元，贯穿研究方法、数据解释与论证。
+- [AP Microeconomics](https://apcentral.collegeboard.org/courses/ap-microeconomics) 与 [AP Macroeconomics](https://apcentral.collegeboard.org/courses/ap-macroeconomics)：经济学内容于 **2026 年 11 月 5 日**对照 Fall 2026 CED 核查，各采用六单元结构；宏观区分有限准备金与充裕准备金的政策传导。
 - [AP Research](https://apcentral.collegeboard.org/courses/ap-research)及[评估形式](https://apcentral.collegeboard.org/courses/ap-research/exam)：论文 4,000–5,000 词、占 75%；展示与口头答辩合计约 15–20 分钟、占 25%。
 - [2026–27 AP Capstone AI 使用政策](https://apcentral.collegeboard.org/exam-administration-ordering-scores/administering-exams/exam-policies/artificial-intelligence-tools)与[研究伦理及审批政策](https://apcentral.collegeboard.org/courses/resources/ap-capstone-policies)：AI 可辅助探索、初步寻找来源、理解材料与检查语法语气；学生须直接阅读来源并独立完成分析、综合和最终表达，完成 PREP 与教师过程检查点。数据收集前须完成教师审查，额外审批依研究内容与传播计划核对。
 

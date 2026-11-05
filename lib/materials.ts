@@ -1,4 +1,5 @@
 /** Local-only source library. Binary images belong in IndexedDB, never localStorage. */
+import {SUBJECT_IDS} from './subject-ids.ts';
 export type Material = {
   id: string;
   title: string;
@@ -14,7 +15,7 @@ export type Material = {
 export const MATERIAL_IMAGE_LIMIT = 3 * 1024 * 1024;
 export const MATERIAL_TEXT_LIMIT = 6 * 1024;
 export const MATERIAL_BACKUP_LIMIT = 20 * 1024 * 1024;
-const SUBJECTS = new Set(["world", "elc", "physics", "stats", "psych", "research"]);
+const SUBJECTS = new Set<string>(SUBJECT_IDS);
 const DATABASE = "ap-study-studio-materials";
 const STORE = "materials";
 let database: Promise<IDBDatabase> | undefined;

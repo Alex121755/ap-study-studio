@@ -11,7 +11,7 @@ import "./material-library.css";
 type Props = { subjectId: string; onUse: (material: Material) => void; onNotice: (text: string) => void };
 type EditorTab = "note" | "link" | "upload";
 type Draft = { title: string; content: string; url: string; dataUrl: string; mimeType: string; type: Material["type"] };
-const subjectNames: Record<string, string> = { world: "World History", elc: "English Language", physics: "Physics C: E&M", stats: "Statistics", psych: "Psychology", research: "Research" };
+const subjectNames: Record<string, string> = { world: "World History", elc: "English Language", physics: "Physics C: E&M", stats: "Statistics", psych: "Psychology", research: "Research",micro:'Microeconomics',macro:'Macroeconomics' };
 const typeNames: Record<Material["type"], string> = { note: "自己的笔记", link: "外部链接", image: "作业截图", text: "文本文件" };
 const emptyDraft = (type: Material["type"] = "note"): Draft => ({ title: "", content: "", url: "", dataUrl: "", mimeType: "", type });
 const fileAsDataUrl = (file: File): Promise<string> => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(new Error("无法读取这张图片，请重新选择。")); reader.readAsDataURL(file); });
