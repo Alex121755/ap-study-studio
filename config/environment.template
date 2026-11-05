@@ -1,0 +1,8 @@
+# OpenAI API credential: fill this only in your ignored .env.local file.
+OPENAI_API_KEY=
+
+# Optional HTTP proxy for outbound API calls. Leave blank if unused.
+AP_ATLAS_PROXY_URL=
+
+# Local loopback service port.
+AP_ATLAS_PORT=5173

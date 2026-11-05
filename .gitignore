@@ -1,0 +1,52 @@
+# Dependencies and builds
+node_modules/
+.next/
+dist/
+out/
+coverage/
+next-env.d.ts
+*.tsbuildinfo
+
+# Local configuration and credentials
+.env
+.env.*
+**/.env*
+.npmrc
+**/.npmrc
+.dev.vars*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+**/credentials.json
+*.credentials.json
+.git-credentials
+.aws/
+secrets*
+**/secrets*
+
+# Logs, backups and local workspace data
+*.log
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+backups/
+backup/
+outputs/
+work/
+.codex/
+.agents/
+.wrangler/
+.sites-runtime/
+.vinext/
+.DS_Store
+Thumbs.db
+
+# Package manager caches
+.npm/
+.pnpm-store/
+.yarn/
+
